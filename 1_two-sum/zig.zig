@@ -7,6 +7,8 @@ fn getRandomInt() i32 {
     return rand.intRangeAtMost(i32, -1_000_000_000, 1_000_000_000);
 }
 
+// returning an array is undefined behavior, ritard player, big problem
+// it was chatGPT (not me lul)
 fn generateNums(target: i32) []i32 {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();

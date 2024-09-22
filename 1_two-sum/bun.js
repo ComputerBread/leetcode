@@ -7,7 +7,7 @@ function getRandomNum(min, max) {
 function generateData() {
   const MIN_VAL = -1e9;
   const MAX_VAL = 1e9;
-  const LENGTH = 1e4;
+  const LENGTH = 1e5;
   const TARGET = getRandomNum(MIN_VAL, MAX_VAL)
 
   // Initialize the array with random i32 values
@@ -21,8 +21,11 @@ function generateData() {
   }
 
   // Adjust nums[i] and nums[j] so that nums[i] + nums[j] = target
-  nums[i] = getRandomNum(MIN_VAL, MAX_VAL);
-  nums[j] = TARGET - nums[i];
+  // to stay inside the constraints
+  do {
+    nums[i] = getRandomNum(MIN_VAL, MAX_VAL);
+    nums[j] = TARGET - nums[i];
+  } while (nums[j] > 1e9 || nums[j] < -1e9)
 
   // filling the array while makign sure there's a unique solution
   const map = new Map();
@@ -82,6 +85,7 @@ function benchmark(methods, runNb) {
     let measures = [fn.name];
     for (let i = 0; i < runNb; i++) {
 
+      console.log(`${fn.name}#${i}`);
       const data = generateData();
 
       const t0 = performance.now();

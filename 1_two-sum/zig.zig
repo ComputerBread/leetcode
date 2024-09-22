@@ -7,15 +7,11 @@ fn getRandomInt() i32 {
     return rand.intRangeAtMost(i32, -1_000_000_000, 1_000_000_000);
 }
 
-// returning an array is undefined behavior, ritard player, big problem
-// it was chatGPT (not me lul)
-fn generateNums(target: i32) []i32 {
+fn generateNums(target: i32, nums: []i32, length: usize) void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    const length = 10000;
-    var nums: [length]i32 = undefined;
     var map = std.AutoHashMap(i32, u1).init(allocator);
     defer map.deinit();
 
@@ -29,11 +25,14 @@ fn generateNums(target: i32) []i32 {
 
     nums[i] = getRandomInt();
     nums[j] = target - nums[i];
-    //    print("RES ({d}: {d}, {d}: {d})\n", .{ i, nums[i], j, nums[j] });
-    //    print("RES ({d}+{d}={d}={d})\n", .{ nums[i], nums[j], nums[i] + nums[j], target });
+    // to prevent overflow
+    while (nums[j] > 1e9 or nums[j] < -1e9) {
+        nums[i] = getRandomInt();
+        nums[j] = target - nums[i];
+    }
 
     // Fill the rest of the array with random values, avoiding nums[i] and nums[j]
-    for (&nums, 0..) |*item, k| {
+    for (nums, 0..) |*item, k| {
         if (k != i and k != j) {
             var value: i32 = 0;
             while (true) {
@@ -47,8 +46,6 @@ fn generateNums(target: i32) []i32 {
             item.* = value;
         }
     }
-
-    return nums[0..length];
 }
 
 pub fn main() void {
@@ -67,12 +64,19 @@ pub fn main() void {
 
         // init
         const target: i32 = getRandomInt();
-        const nums = generateNums(target);
+        const length = 10000;
+        var nums: [length]i32 = undefined;
+        generateNums(target, &nums, length);
+        for (nums) |n| {
+            if (n > 1e9 or n < -1e9) {
+                print("value is out of range: {}\n", .{n});
+            }
+        }
 
         const start_time: i64 = std.time.microTimestamp(); // Record start time
 
-        //bruteForce(target, nums);
-        hashmap(target, nums);
+        //bruteForce(target, &nums);
+        hashmap(target, &nums);
 
         const end_time: i64 = std.time.microTimestamp(); // Record end time
 
@@ -83,7 +87,7 @@ pub fn main() void {
     }
 
     const average_duration: i64 = @divTrunc(total_duration, num_runs); // Calculate average duration
-    std.debug.print("Average execution time: {} milliseconds\n", .{average_duration});
+    std.debug.print("Average execution time: {} microseconds\n", .{average_duration});
 }
 
 fn bruteForce(target: i32, nums: []i32) void {
@@ -92,9 +96,7 @@ fn bruteForce(target: i32, nums: []i32) void {
             if (i == j) {
                 continue;
             }
-            const sum = @addWithOverflow(n, m);
-            if (sum[1] == 1) continue;
-            if (target == sum[0]) {
+            if (target == n + m) {
                 //print("Index 1: {d}, Index 2: {d} \n", .{ i, j });
                 //print("{d} + {d} = {d} should be = {d}\n", .{ n, m, n + m, target });
                 return;
@@ -114,8 +116,6 @@ fn hashmap(target: i32, nums: []i32) void {
         map.put(n, 1) catch @panic("map");
     }
     for (nums) |m| {
-        const sub = @addWithOverflow(target, -m);
-        if (sub[1] == 1) continue;
-        if (map.contains(sub[0])) return;
+        if (map.contains(target - m)) return;
     }
 }

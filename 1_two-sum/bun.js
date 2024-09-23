@@ -7,7 +7,7 @@ function getRandomNum(min, max) {
 function generateData() {
   const MIN_VAL = -1e9;
   const MAX_VAL = 1e9;
-  const LENGTH = 1e5;
+  const LENGTH = 1e4;
   const TARGET = getRandomNum(MIN_VAL, MAX_VAL)
 
   // Initialize the array with random i32 values
@@ -60,6 +60,16 @@ function bruteForce(nums, target) {
   }
 }
 
+function bruteForce2(nums, target) {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] + nums[j] === target) {
+        return { i, j };
+      }
+    }
+  }
+}
+
 function hmap(nums, target) {
   const map = new Map();
   nums.forEach((n, i) => {
@@ -103,7 +113,7 @@ function benchmark(methods, runNb) {
   return benchRes;
 }
 
-const res = benchmark([bruteForce, hmap], 100);
+const res = benchmark([bruteForce, bruteForce2, hmap], 10);
 console.log(res);
 
 

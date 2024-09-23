@@ -64,19 +64,15 @@ pub fn main() void {
 
         // init
         const target: i32 = getRandomInt();
-        const length = 10000;
+        const length = 1e5;
         var nums: [length]i32 = undefined;
         generateNums(target, &nums, length);
-        for (nums) |n| {
-            if (n > 1e9 or n < -1e9) {
-                print("value is out of range: {}\n", .{n});
-            }
-        }
 
+        print("bruteforce#{}", .{i});
         const start_time: i64 = std.time.microTimestamp(); // Record start time
 
-        //bruteForce(target, &nums);
-        hashmap(target, &nums);
+        bruteForce(target, &nums);
+        //hashmap(target, &nums);
 
         const end_time: i64 = std.time.microTimestamp(); // Record end time
 

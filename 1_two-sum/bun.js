@@ -76,9 +76,32 @@ function hmap(nums, target) {
     map.set(n, i);
   });
   for (let i = 0; i < nums.length; i++) {
-    if (map.has(target - nums[i])) {
+    const j = map.get(target - nums[i]);
+    if (j !== undefined && i !== j) {
       return { i, j: map.get(target - nums[i]) };
     }
+  }
+}
+
+function hmap2(nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const j = map.get(target - nums[i]);
+    if (j !== undefined && i !== j) {
+      return { i, j: map.get(target - nums[i]) };
+    }
+    map.set(nums[i], i);
+  }
+}
+
+function hmap3(nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const sub = target - nums[i];
+    if (map.has(sub)) {
+      return { i, j: map.get(sub) };
+    }
+    map.set(nums[i], i);
   }
 }
 
@@ -107,13 +130,16 @@ function benchmark(methods, runNb) {
       avg += t;
       measures.push(t);
     }
-    measures.push(`avg: ${avg / runNb}`);
+    measures.push(`avg: ${avg / runNb} ms`);
     benchRes.push(measures);
   }
   return benchRes;
 }
 
-const res = benchmark([bruteForce, bruteForce2, hmap], 10);
+//const res = benchmark([bruteForce], 10);
+// const res = benchmark([bruteForce, bruteForce2], 10);
+// const res = benchmark([bruteForce, bruteForce2, hmap], 10);
+const res = benchmark([hmap, hmap2, hmap3], 10);
 console.log(res);
 
 

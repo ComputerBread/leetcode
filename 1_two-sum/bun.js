@@ -7,7 +7,7 @@ function getRandomNum(min, max) {
 function generateData() {
   const MIN_VAL = -1e9;
   const MAX_VAL = 1e9;
-  const LENGTH = 1e4;
+  const LENGTH = 1e5;
   const TARGET = getRandomNum(MIN_VAL, MAX_VAL)
 
   // Initialize the array with random i32 values
@@ -87,7 +87,7 @@ function hmap2(nums, target) {
   const map = new Map();
   for (let i = 0; i < nums.length; i++) {
     const j = map.get(target - nums[i]);
-    if (j !== undefined && i !== j) {
+    if (j !== undefined) {
       return { i, j: map.get(target - nums[i]) };
     }
     map.set(nums[i], i);
@@ -137,8 +137,8 @@ function benchmark(methods, runNb) {
 }
 
 //const res = benchmark([bruteForce], 10);
-// const res = benchmark([bruteForce, bruteForce2], 10);
-// const res = benchmark([bruteForce, bruteForce2, hmap], 10);
+//const res = benchmark([bruteForce, bruteForce2], 10);
+// const res = benchmark([bruteForce, bruteForce2, hmap, hmap3], 10);
 const res = benchmark([hmap, hmap2, hmap3], 10);
 console.log(res);
 

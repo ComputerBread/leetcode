@@ -152,7 +152,7 @@ function benchmark2(methods, runNb) {
   const writer = file.writer();
   writer.write(["length", ...(methods.map(m => m.name))].join())
   writer.write("\n");
-  for (let l = 10; l < 2e4; l += 10) { // change max & increment as needed
+  for (let l = 10; l <= 1e5; l += 100) { // change max & increment as needed
     const measure = Array.from({ length: methods.length }, _ => 0);
     userFeedback(startingTime, l);
     for (let r = 0; r < runNb; r++) {
@@ -179,7 +179,7 @@ function benchmark2(methods, runNb) {
 //const res = benchmark([bruteForce], 10);
 // const res = benchmark([bruteForce, bruteForce2], 10);
 // benchmark([bruteForce, bruteForce2, hmap], 10);
-benchmark2([hmap, hmap2, hmap3], 10);
-// benchmark2([bruteForce2, hmap3], 10);
+//benchmark2([hmap, hmap2, hmap3], 10);
+benchmark2([bruteForce2, hmap3], 5);
 
 

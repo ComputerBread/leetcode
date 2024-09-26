@@ -1,5 +1,5 @@
 const N = 10;
-const isBruteForce2 = false;
+const isBruteForce2 = true;
 
 function draw(I, J) {
 

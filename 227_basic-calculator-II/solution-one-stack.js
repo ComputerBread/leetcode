@@ -1,6 +1,5 @@
 var calculate = function(s) {
   const stack = [];
-  stack.push(0); // optional
   let op = "+";
 
   for (let i = 0; i < s.length; i++) {
@@ -13,7 +12,7 @@ var calculate = function(s) {
       do {
         i++;
       }
-      while (i < s.length && '0' <= s[i] && s[i] <= '9');
+      while ('0' <= s[i] && s[i] <= '9' && i < s.length);
 
       const num = Number(s.slice(start, i));
       i--; // because the for loop will increment i

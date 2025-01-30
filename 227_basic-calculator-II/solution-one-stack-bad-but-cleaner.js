@@ -1,3 +1,5 @@
+// I guess this is "cleaner", but it's not really good tho
+// because, we use the fact that s[i] === undefined when i is out of range!
 var calculate = function(s) {
   const stack = [];
   let op = '+';

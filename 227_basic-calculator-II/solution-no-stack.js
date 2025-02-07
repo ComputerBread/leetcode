@@ -1,5 +1,6 @@
 var calculate = function(s) {
-  const stack = [];
+  let sum = 0;
+  let term = 0;
   let op = "+";
 
   for (let i = 0; i < s.length; i++) {
@@ -19,16 +20,18 @@ var calculate = function(s) {
 
       switch (op) {
         case "+":
-          stack.push(num);
+          sum += term;
+          term = num;
           break;
         case "-":
-          stack.push(-num);
+          sum += term;
+          term = -num;
           break;
         case "*":
-          stack.push(stack.pop() * num);
+          term *= num;
           break;
         case "/":
-          stack.push(Math.trunc(stack.pop() / num));
+          term = Math.trunc(term / num);
           break;
       }
 
@@ -38,7 +41,8 @@ var calculate = function(s) {
     }
   }
 
-  return stack.reduce((acc, curr) => acc + curr);
+  return sum + term;
 
 };
 
+console.log(calculate(" 2/3 "))
